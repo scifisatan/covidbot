@@ -1,0 +1,4 @@
+schedule==0.6.0
+requests==2.18.4
+tweepy==3.8.0
+beautifulsoup4==4.9.1
