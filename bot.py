@@ -6,10 +6,11 @@ import schedule
 import tweepy
 
 #Twitter API Authentication
-consumer_key = "XklQ1cCtsnz69OxI5M0HTBnxD"
-consumer_secret = "hr8GbfI7qlYjvrFSpF0dhRDbl7ScISumNunImzbdQ1n4S36sCi"
-access_token = "1261594236207525888-rSiG1qqxk2rRH2JAUx5xMbrvEj1hqG"
-access_token_secret = "qrU5TIUWZK3JL9Zt82ZuFGHrfz6H9daLAoqKP21Dh5Eja"
+""" Get your API keys from twitter developer program and paste it here"""
+consumer_key = ""
+consumer_secret = ""
+access_token = ""
+access_token_secret = ""
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
@@ -80,14 +81,14 @@ def format_post(new_datal,db_data):
 def tweet(msg):
     api.update_status(msg)
 
-# Daily Update
+#Daily Update
 def daily_update():
+    print("Daily Update initiating...")
     data_today = stats(url)
     data_todayl = data_today.split(' ')
     with open('daily_data.txt','r') as f:
         db_data_yesterday = f.readline().strip().split(' ')
         post = f"Updates From Last 24 Hours\n\nSamples tested: {int(data_todayl[0])-int(db_data_yesterday[0])}\nNew COVID-19 cases: {int(data_todayl[2])-int(db_data_yesterday[2])}\nPatients recovered: {int(data_todayl[4])-int(db_data_yesterday[4])}\nCOVID-19 related deaths: {int(data_todayl[3])-int(db_data_yesterday[3])}\n"
-        browser.refresh()
         tweet(post)
     with open('daily_data.txt','w') as f:
         f.write(data_today+'\n')
@@ -106,6 +107,7 @@ while check:
         if new_datal[2] == db_data[2] and new_datal[3] == db_data[3]:
             pass
         else:
+            print("New data found.... Tweeting...")
             tweet(msg)
             with open('covid19_data.txt','w') as f:
                 f.write(new_data+'\n')
