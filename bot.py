@@ -3,11 +3,12 @@ import requests
 import time
 import tweepy
 
+
 #Twitter API Authentication
-consumer_key = 
-consumer_secret = 
-access_token = 
-access_token_secret = 
+consumer_key = ""
+consumer_secret = ""
+access_token = ""
+access_token_secret = ""
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth)
@@ -16,6 +17,10 @@ api = tweepy.API(auth)
 url = "https://covid19.mohp.gov.np/covid/api/confirmedcases"
 check = True
 prevstat = ""
+
+def number(num):
+    result = f"{int(num):,d}"
+    return result
 
 # Getting data/numbers
 def stats(link):
@@ -38,12 +43,12 @@ def stats(link):
 # Tweets
 def tweet(msg):
     api.update_status(msg)
-    print("tweeted")
+    print("Tweeted!")
 
 #extracts previous data
 def prev_data():
     tweets = []
-    username = 'CovidBotNepal'
+    username = 'NepalCovid19Bot'
 
     for tweet in api.user_timeline(id=username, count=10, tweet_mode='extended'):
         tweets.append(tweet.full_text)
@@ -68,14 +73,12 @@ def prev_data():
 
     data = f'{sample} {total} {deaths} {recovered}'
     msg = data.strip().split(' ')
-    print("previous data extracted")
-    print(msg)
     return msg
 
 
 # Formats Tweet
 def format_post(new_data):
-    msg = f"Today Recovered: {new_data[8]}\nPCR Tests taken today: {new_data[10]}\nRDT Tests taken today: {new_data[9]}\n\nTotal Positive Cases: {new_data[2]}\nDeaths: {new_data[3]}\nRecovered: {new_data[4]}\nSamples Tested: {new_data[0]}\nDate: {new_data[5]}"
+    msg = f"Today Recovered: {number(new_data[8])}\nPCR Tests taken today: {number(new_data[10])}\nRDT Tests taken today: {number(new_data[9])}\n\nTotal Positive Cases: {number(new_data[2])}\nDeaths: {number(new_data[3])}\nRecovered: {number(new_data[4])}\nSamples Tested: {number(new_data[0])}\nDate: {new_data[5]}"
     new_case = int(new_data[7])
     if new_case == 0:
         new_case = "no"
@@ -108,15 +111,13 @@ def format_post(new_data):
     print("tweet formatted")
     return msg
 
-
+keep_alive()
 while check:
     try:
         db_data = prev_data()
         new_data = stats(url)
-        if new_data[3] != db_data[2] or new_data[2] != db_data[1]:
+        if number(new_data[3]) != db_data[2] or number(new_data[2]) != db_data[1]:
             msg = format_post(new_data)
-            print("New data found.... Tweeting...")
-            print(new_data)
             try:
                 tweet(msg)
             except:
