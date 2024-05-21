@@ -6,7 +6,7 @@ authors = ["sovitpy <sovitlekhak@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-requests = "^2.28.1"
+requests = "^2.32.0"
 tweepy = "3.8.0"
 beautifulsoup4 = "4.9.1"
 schedule = "0.6.0"
